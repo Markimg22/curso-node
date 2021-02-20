@@ -7,6 +7,7 @@ exports.homePage = (req, res) => {
 };
 
 exports.handleForm = (req, res) => {
+  res.render('index');
   console.log(req.body);
   return;
 };

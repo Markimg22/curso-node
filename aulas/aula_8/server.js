@@ -2,9 +2,10 @@ require('dotenv').config();
 
 const express = require('express');
 const app = express();
-const mongoose = require('mongoose');
+const path = require('path');
 
 // Connection to Database
+const mongoose = require('mongoose');
 mongoose
   .connect(process.env.CONNECTION_STRING, {
     useNewUrlParser: true,
@@ -21,10 +22,9 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
 
-// Routes
-const routes = require('./routes');
-const path = require('path');
-const middleware = require('./src/middlewares/middleware');
+// Helmet
+const helmet = require('helmet');
+app.use(helmet());
 
 // File Static
 app.use(express.urlencoded({ extended: true }));
@@ -32,12 +32,12 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 
 // Config Sessions
 const sessionOptions = session({
-  secret: 'adwadadkpkpo1k23131 wdawd12 aoskdaw()', // id da seção, pode ser qualquer coisa
+  secret: 'adwadadkpkpo1k23131 wdawd12 aoskdaw()',
   store: new MongoStore({ mongooseConnection: mongoose.connection }),
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24, // ficar salvo durante 1 dia
+    maxAge: 1000 * 60 * 60 * 24,
     httpOnly: true,
   },
 });
@@ -49,8 +49,22 @@ app.use(flash());
 app.set('views', path.resolve(__dirname, 'src', 'views'));
 app.set('view engine', 'ejs');
 
+// Csurf
+const csrf = require('csurf');
+app.use(csrf());
+
 // Middlewares
-app.use(middleware);
+const {
+  middlewareGlobal,
+  checkCsrfError,
+  csrfMiddleware,
+} = require('./src/middlewares/middleware');
+app.use(middlewareGlobal);
+app.use(checkCsrfError);
+app.use(csrfMiddleware);
+
+// Routes
+const routes = require('./routes');
 app.use(routes);
 
 // Connected

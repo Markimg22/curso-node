@@ -8,10 +8,18 @@
     <% } %>
   </h1>
   <p>
-    <% numbers.forEach(num => { %>
+    <% if (typeof number !== 'undefined') numbers.forEach(num => { %>
       <%= num %>
-    <% });  %> 
+    <% }); %> 
   </p>
   <p><%= teste %> </p>
+</div>
+<div>
+  <form action="/" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label for="name">Nome:</label>
+    <input type="text" name="name" />
+    <button>Enviar</button>
+  </form>
 </div>
 <%- include('includes/script') %> 
