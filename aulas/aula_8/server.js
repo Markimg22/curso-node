@@ -50,7 +50,7 @@ app.set('views', path.resolve(__dirname, 'src', 'views'));
 app.set('view engine', 'ejs');
 
 // Middlewares
-// app.use(middleware); // todas as requisições vão passar por essa função
+app.use(middleware);
 app.use(routes);
 
 // Connected
