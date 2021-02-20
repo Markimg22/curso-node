@@ -26,8 +26,9 @@ const flash = require('connect-flash');
 const helmet = require('helmet');
 app.use(helmet());
 
-// File Static
+// Config Express
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static(path.resolve(__dirname, 'public')));
 
 // Config Sessions
